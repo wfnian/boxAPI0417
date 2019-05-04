@@ -2,13 +2,13 @@
 package main
 
 import (
-	"./heartbeat2"
-	_ "./initialization1"
 	"fmt"
+	// "./initialization1"
+	"./utils"
 )
 
 func main() {
 	fmt.Println("main")
-	heartbeat2.Init()
-
+	//heartbeat2.Init()
+	utils.Reboot()
 }
