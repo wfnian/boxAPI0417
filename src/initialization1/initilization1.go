@@ -1,19 +1,19 @@
 package initialization1
+//package main
 
 import (
 	"fmt"
-	"net"
-	"strings"
+
+	"../utils"
 )
 
-func init() {
-	//https://blog.csdn.net/linuxweiyh/article/details/78413275 Ubuntu 16.04下设置静态IP
-	//获取本机IP地址
-	conn, err := net.Dial("udp4", "baidu.com:80")
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	defer conn.Close()
-	fmt.Println(strings.Split(conn.LocalAddr().String(), ":")[0])
+func InitSetting() {
+	fmt.Println()
+	UUID := utils.GetUUID() //获取本机唯一标识符，本机唯一标识符设置详见函数
+	fmt.Println(UUID)
+
+}
+
+func main() {
+	InitSetting()
 }
