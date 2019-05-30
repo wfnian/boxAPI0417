@@ -30,6 +30,12 @@ type ResponseGetServerUrlAndIP struct {
 	Timstamp string
 }
 
+//配置网络文件
+func networkSetting(networkConfig ResponseNetwork) {
+	// /etc/network/interfaces
+}
+
+//GetConfig 从上位机获取网络配置
 func GetConfig() {
 	UUID := utils.GetUUID() //获取本机唯一标识符，本机唯一标识符设置详见函数
 	IP := utils.GetIP()
@@ -52,8 +58,9 @@ func GetConfig() {
 			continue
 		}
 		if ack.Message == "成功!" {
-			//setting network
+			//setting network 配置网络情况
 			fmt.Println(ack.Results.Network)
+			networkSetting(ack.Results.Network)
 			break
 		} else {
 			continue
