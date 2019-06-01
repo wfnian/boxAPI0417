@@ -3,8 +3,11 @@ package main
 //package heartbeat2
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -16,6 +19,17 @@ type BoxRunningInfo struct {
 	CPU             string `json:"cpu"`
 	TPU             string `json:"tpu"`
 	CoreTemperature string `json:"coreTemperature"`
+}
+
+type Response struct {
+	Message  string  `json:"message"`
+	Results  Results `json:"results"`
+	Status   int     `json:"status"`
+	Timstamp string  `json:"timstamp"`
+}
+
+type Results struct {
+	SyncStates int `json:"syncStates"`
 }
 
 func cpuVpuUsage() (string, string) {
@@ -75,7 +89,6 @@ func cpuVpuUsage() (string, string) {
 	}
 
 	// fmt.Printf("CPU usage is %.3f%%\n", cpuPercentage)
-	// fmt.Printf("VPU usage is %.3f%%\n", vpuPercentage)
 
 	return strconv.FormatFloat(cpuPercentage, 'f', 6, 64), strconv.FormatFloat(vpuPercentage, 'f', 6, 64)
 }
@@ -83,13 +96,48 @@ func cpuVpuUsage() (string, string) {
 //HeartBeat 心跳
 func HeartBeat() {
 
-	//UUID := utils.GetUUID() //获取本机唯一标识符，本机唯一标识符设置详见函数
+	UUID := utils.GetUUID() //获取本机唯一标识符，本机唯一标识符设置详见函数
 	IP := utils.GetIP()
-	fmt.Println(IP)
+
+	url := "http://" + IP + "/box/heartBeat?identifierId="
+	url += UUID
+	url = "http://localhost:3000/object"
+	cpu, vpu := cpuVpuUsage()
+	// log.Println(cpu, vpu)
+	post := BoxRunningInfo{
+		CPU:             cpu,
+		TPU:             vpu,
+		CoreTemperature: "pass",
+	}
+	send, err := json.Marshal(post)
+	fmt.Println(string(send))
+	//向上位机报告自己的状态
+	//resp, err := http.Post(url, "application/json", strings.NewReader(string(send)))
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Panicln(err)
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Panicln(err)
+	}
+	var response Response
+	err = json.Unmarshal([]byte(body), &response)
+	if err != nil {
+		log.Panicln(err)
+	}
+	if response.Message != "成功!" {
+		log.Panicln(err)
+	} else if response.Results.SyncStates == 1 {
+		//调用获取同步任务
+		fmt.Println("调用获取同步任务")
+	}
 
 }
 
-func main() {
+func _main() {
 	HeartBeat()
-	
+
 }

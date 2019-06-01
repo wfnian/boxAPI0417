@@ -10,18 +10,18 @@ import (
 //Reboot 重启机器 修改了本机IP等需要重启
 func Reboot() {
 	fmt.Println("reboot")
-	shell := exec.Command("ls") //修改为重启 reboot
+	shell := exec.Command("ls", "-l") //修改为重启 reboot
 	stdout, err := shell.StdoutPipe()
 	defer stdout.Close()
 	if err != nil {
-		log.Fatal(err)
+		log.Panicln(err)
 	}
 	if err := shell.Start(); err != nil {
-		log.Fatal(err)
+		log.Panicln(err)
 	}
 	opBytes, err := ioutil.ReadAll(stdout)
 	if err != nil {
-		log.Fatal(err)
+		log.Panicln(err)
 	}
 	log.Println(string(opBytes))
 

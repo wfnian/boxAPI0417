@@ -1,0 +1,13 @@
+{
+  "max_face": 600,
+  "min_face": 20,
+  "upload_display": true,
+  "display_width": 300,
+  "area": {
+    "top": 0,
+    "left": 0,
+    "width": 1920,
+    "height": 1080
+  },
+  "url": "rtsp://admin:123456@192.168.1.83:554/mpeg4"
+}

@@ -1,22 +1,17 @@
-package initialization1
+//package initialization1
 
-//package main
+package main
 
 import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 
+	"../StdMsgForm"
 	"../utils"
 )
-
-//ResponseRegist 注册时候的应答body回应
-type ResponseRegist struct {
-	Message  string
-	Status   int
-	Timstamp string
-}
 
 //InitSetting 第一个需求：初始化
 func InitSetting() {
@@ -27,7 +22,7 @@ func InitSetting() {
 	for {
 		url := "http://" + IP + "/box/regist?identifierId="
 		url += UUID
-		fmt.Println(url)
+		//url = "http://localhost:3000/object" //临时测试
 		resp, err := http.Get(url)
 		if err != nil {
 			fmt.Println("url err", err)
@@ -35,22 +30,21 @@ func InitSetting() {
 		}
 		body, _ := ioutil.ReadAll(resp.Body)
 		defer resp.Body.Close()
-		var ack ResponseRegist
+		var ack StdMsgForm.Response
 		err = json.Unmarshal([]byte(body), &ack)
 		if err != nil {
 			//panic(err)
 			fmt.Println(err)
 			continue
 		}
-		if ack.Message == "成功!" {
+		if ack.Status == 200 {
 			fmt.Println("ok")
 			break
 		} else {
-			fmt.Println("不成功")
+			log.Println("Error:", ack.Status, "retry")
 			continue
 		}
 	}
-
 
 }
 

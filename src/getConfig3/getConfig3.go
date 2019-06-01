@@ -1,39 +1,16 @@
-package getconfig3
+//package getconfig3
+package main
 
 import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 
+	"../StdMsgForm"
 	"../utils"
 )
-
-//ResponseNetwork 包含在下面ResponseResults
-type ResponseNetwork struct {
-	Address string
-	Netmask string
-	Gateway string
-}
-
-//ResponseResults 包含在下面ResponseGetServerUrlAndIP
-type ResponseResults struct {
-	ServerUrl string
-	Network   ResponseNetwork
-}
-
-//ResponseGetServerUrlAndIP 获取上位机地址和box网络配置的应答body回应
-type ResponseGetServerUrlAndIP struct {
-	Message  string
-	Results  ResponseResults
-	Status   int
-	Timstamp string
-}
-
-//配置网络文件
-func networkSetting(networkConfig ResponseNetwork) {
-	// /etc/network/interfaces
-}
 
 //GetConfig 从上位机获取网络配置
 func GetConfig() {
@@ -43,27 +20,34 @@ func GetConfig() {
 	for {
 		url := "http://" + IP + "/box/getServerUrl?identifierId="
 		url += UUID
+
+		//临时测试用
+		url = "http://localhost:3000/object"
 		resp, err := http.Get(url)
 		if err != nil {
-			fmt.Println("url err", err)
+			log.Println(err)
 			continue
 		}
 		body, _ := ioutil.ReadAll(resp.Body)
 		defer resp.Body.Close()
-		var ack ResponseGetServerUrlAndIP
+		var ack StdMsgForm.Response
 		err = json.Unmarshal([]byte(body), &ack)
 		if err != nil {
-			//panic(err)
-			fmt.Println(err)
+			log.Println(err)
 			continue
 		}
-		if ack.Message == "成功!" {
+		if ack.Status == 200 {
 			//setting network 配置网络情况
 			fmt.Println(ack.Results.Network)
-			networkSetting(ack.Results.Network)
+			//networkSetting(ack.Results.Network)
+			ConfigNetwork(ack.Results.Network.Address, ack.Results.Network.Netmask, ack.Results.Network.Gateway)
 			break
 		} else {
 			continue
 		}
 	}
+}
+
+func main() {
+	GetConfig()
 }
