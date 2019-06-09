@@ -1,24 +1,20 @@
+
 package main
 
 import (
-	"../src/StdMsgForm"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
+	"log"
+	"net/http"
 )
 
 func main() {
-	var res StdMsgForm.Response
-	fmt.Println(res.Message)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("httpserver v1"))
+	})
+	http.HandleFunc("/bye", sayBye)
+	log.Println("Starting v1 server ...")
+	log.Fatal(http.ListenAndServe(":1210", nil))
+}
 
-	data, err := ioutil.ReadFile("../config/collectorConfig.json")
-	if err != nil {
-		fmt.Println(err)
-	}
-	var collectorConfig StdMsgForm.CollectorConfig
-	err = json.Unmarshal([]byte(data), &collectorConfig)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(collectorConfig.Url)
+func sayBye(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("bye bye ,this is v1 httpServer"))
 }

@@ -1,0 +1,17 @@
+{
+    "jsonrpc": "2.0",
+    "id": null,
+    "method": "facetrack",
+    "params": {
+        "id": "",
+        "source": "",
+        "faces": [
+            {}
+        ],
+        "props": {},
+        "background": "",
+        "features": [
+            ""
+        ]
+    }
+}

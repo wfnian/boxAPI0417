@@ -1,7 +1,7 @@
-package main
+// Package getconfig3 网络配置相关
+package getconfig3
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -57,15 +57,18 @@ func ConfigNetwork(address, netmask, gateway string) {
 		change = append(change, c)
 	}
 	if isChanged {
-		fmt.Println(strings.Join(change, "\n"))
+		//fmt.Println(strings.Join(change, "\n"))
 		err = ioutil.WriteFile(configFile, []byte(strings.Join(change, "\n")), 0666)
+		if err != nil {
+			log.Panicln(err)
+		}
 		// 修改后需要重启
 		utils.Reboot()
 	}
 
 }
 
-func main() {
-	address, netmask, gateway := "192.168.1.109", "255.255.255.0", "192.168.1.1"
-	ConfigNetwork(address, netmask, gateway)
-}
+// func main() {
+// 	address, netmask, gateway := "192.168.1.109", "255.255.255.0", "192.168.1.1"
+// 	ConfigNetwork(address, netmask, gateway)
+// }

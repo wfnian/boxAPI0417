@@ -1,0 +1,10 @@
+{
+    "jsonrpc": "2.0",
+    "id": null,
+    "method": "get_db_persons",
+    "params": {
+        "id": "",
+        "offset": 0,
+        "count": 1000
+    }
+}

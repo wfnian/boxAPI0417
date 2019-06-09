@@ -1,0 +1,10 @@
+{
+    "jsonrpc": "2.0",
+    "id": null,
+    "method": "add_aggreate_feature_to_person",
+    "params": {
+        "id": "",
+        "db": "",
+        "feature": ""
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "jsonrpc": "2.0",
+    "id": null,
+    "method": "get_features",
+    "params": {
+        "images": [
+            ""
+        ],
+        "retattr": false
+    }
+}

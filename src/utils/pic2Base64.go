@@ -2,14 +2,13 @@ package utils
 
 import (
 	"encoding/base64"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 )
 
 func Pic2Base64() string {
-	file, err := os.Open("2/home/wfnian/Pictures/2.png")
+	file, err := os.Open("/home/wfnian/project/playground/haha/1.jpg")
 	if err != nil {
 		log.Println("image to base64 err")
 		return ""
@@ -21,6 +20,10 @@ func Pic2Base64() string {
 		return ""
 	}
 	imgBase64 := base64.StdEncoding.EncodeToString(image)
-	fmt.Println(imgBase64)
+	//fmt.Println(imgBase64)
 	return imgBase64
 }
+
+//func main(){
+//	Pic2Base64()
+//}

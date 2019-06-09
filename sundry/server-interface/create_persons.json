@@ -1,0 +1,19 @@
+{
+    "jsonrpc": "2.0",
+    "id": null,
+    "method": "create_persons",
+    "params": {
+        "features": [
+            [
+                {
+                    "feature": "",
+                    "quality": 0.4
+                }
+            ]
+        ],
+        "ids": [
+            "featureid"
+        ],
+        "db": ""
+    }
+}

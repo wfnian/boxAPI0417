@@ -1,0 +1,30 @@
+{
+    "jsonrpc": "2.0",
+    "id": null,
+    "method": "search",
+    "params": {
+        "features": [
+            [
+                {
+                    "feature": "",
+                    "quality": 0.5
+                }
+            ],
+            [
+                {
+                    "feature": "",
+                    "quality": 0.3
+                }
+            ]
+        ],
+        "top": [
+            1000,
+            10
+        ],
+        "threshold": [
+            70,
+            20
+        ],
+        "db": "dbid"
+    }
+}

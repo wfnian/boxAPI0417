@@ -1,0 +1,12 @@
+{
+  "object": {
+    "message": "成功!",
+    "results": {
+      "boxConfigs": [],
+      "collectors": [],
+      "users": []
+    },
+    "status": 200,
+    "timstamp": "2019-05-12 21:49:59"
+  }
+}

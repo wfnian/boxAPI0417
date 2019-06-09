@@ -1,0 +1,8 @@
+{
+    "jsonrpc": "2.0",
+    "id": null,
+    "method": "delete_db",
+    "params": {
+        "id": ""
+    }
+}

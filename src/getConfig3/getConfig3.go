@@ -1,5 +1,5 @@
-//package getconfig3
-package main
+package getconfig3
+// package main
 
 import (
 	"encoding/json"
@@ -21,8 +21,9 @@ func GetConfig() {
 		url := "http://" + IP + "/box/getServerUrl?identifierId="
 		url += UUID
 
-		//临时测试用
-		url = "http://localhost:3000/object"
+		// 临时测试用
+		// url = "http://localhost:3000/object"
+		
 		resp, err := http.Get(url)
 		if err != nil {
 			log.Println(err)
@@ -48,6 +49,6 @@ func GetConfig() {
 	}
 }
 
-func main() {
-	GetConfig()
-}
+// func main() {
+// 	GetConfig()
+// }

@@ -1,8 +1,0 @@
-{
-    "jsonrpc": "2.0",
-    "id": 1,
-    "method": "delete_source",
-    "params": {
-        "id": "e2e530b1-c6de-4560-aca8-405c88592162"
-    }
-}

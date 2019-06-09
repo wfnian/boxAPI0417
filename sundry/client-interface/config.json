@@ -1,0 +1,20 @@
+{
+    "player": 0,
+    "detect_interval": 5,
+    "track_interval": 1,
+    "sample_interval": 4,
+    "max_face": 600,
+    "min_face": 20,
+    "display_width": 300,
+    "area": {
+        "top": 0,
+        "left": 0,
+        "width": 0,
+        "height": 0
+    },
+    "upload_url": "http://apphost:9821",
+    "merge_threshold": 0.8,
+    "min_face_count": 2,
+    "max_tracker": 12,
+    "max_feature": 3
+}

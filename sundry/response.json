@@ -1,0 +1,15 @@
+{
+	"object":{
+		"message": "成功!",
+		"results": {
+			"serverUrl": "http://192.168.1.30:8080/deeppassserver",
+			"network": {
+				"address": "192.168.1.100",
+				"netmask": "255.255.255.0",
+				"gateway": "192.168.1.1"
+			}
+		},
+		"status": 200,
+		"timstamp": "2019-05-10 16:44:31"
+	}
+}

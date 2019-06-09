@@ -1,0 +1,9 @@
+{
+    "jsonrpc": "2.0",
+    "id": null,
+    "method": "create_db",
+    "params": {
+        "id": "",
+        "volume": 20000
+    }
+}
