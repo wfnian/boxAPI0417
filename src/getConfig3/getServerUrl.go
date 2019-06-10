@@ -1,6 +1,5 @@
-//package initialization1
-
-package main
+package getconfig3
+// package main
 
 import (
 	"encoding/json"
@@ -13,19 +12,21 @@ import (
 	"../utils"
 )
 
-//InitSetting 第一个需求：初始化
-func InitSetting() {
-
+//GetConfig 从上位机获取网络配置
+func GetServerUrl() {
 	UUID := utils.GetUUID() //获取本机唯一标识符，本机唯一标识符设置详见函数
 	IP := utils.GetIP()
 
 	for {
-		url := "http://" + IP + "/box/regist?identifierId="
+		url := "http://" + IP + "/box/getServerUrl?identifierId="
 		url += UUID
-		//url = "http://localhost:3000/object" //临时测试
+
+		// 临时测试用
+		// url = "http://localhost:3000/object"
+		
 		resp, err := http.Get(url)
 		if err != nil {
-			fmt.Println("url err", err)
+			log.Println(err)
 			continue
 		}
 		body, _ := ioutil.ReadAll(resp.Body)
@@ -33,21 +34,21 @@ func InitSetting() {
 		var ack StdMsgForm.Response
 		err = json.Unmarshal([]byte(body), &ack)
 		if err != nil {
-			//panic(err)
-			fmt.Println(err)
+			log.Println(err)
 			continue
 		}
 		if ack.Status == 200 {
-			fmt.Println("ok")
+			//setting network 配置网络情况
+			fmt.Println(ack.Results.Network)
+			//networkSetting(ack.Results.Network)
+			ConfigNetwork(ack.Results.Network.Address, ack.Results.Network.Netmask, ack.Results.Network.Gateway)
 			break
 		} else {
-			log.Println("Error:", ack.Status, "retry")
 			continue
 		}
 	}
-
 }
 
-func main() {
-	InitSetting()
-}
+// func main() {
+// 	GetConfig()
+// }

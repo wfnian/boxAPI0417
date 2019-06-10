@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	//启动本地9821端口的服务
 	server := rpc.NewServer()
 	server.RegisterCodec(json.NewCodec(), "application/json")
 	server.RegisterCodec(json.NewCodec(), "application/json;charset=UTF-8")

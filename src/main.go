@@ -14,7 +14,7 @@ func main() {
 	fmt.Println("main start")
 	//heartbeat2.Init()
 	//utils.Reboot()
-	//initialization1.InitSetting()
+	//initialization1.Regist()
 	fmt.Println(utils.GetIP())
 	initialization1.InitSetting()
 	fmt.Println("main end")
