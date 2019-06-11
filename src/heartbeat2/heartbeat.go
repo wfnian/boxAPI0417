@@ -4,7 +4,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -32,6 +31,7 @@ type Results struct {
 	SyncStates int `json:"syncStates"`
 }
 
+// 获取CPU和VPU的利用率，通过计算底层文件
 func cpuVpuUsage() (string, string) {
 	cpuFile := "/proc/stat"
 	vpuFile := "/proc/vpuinfo"
@@ -45,7 +45,7 @@ func cpuVpuUsage() (string, string) {
 	idle1 := 0
 	contents, err := ioutil.ReadFile(cpuFile)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	} else {
 
 		firstline := strings.Fields(strings.Split(string(contents), "\n")[0])
@@ -61,7 +61,7 @@ func cpuVpuUsage() (string, string) {
 
 	contents, err = ioutil.ReadFile(cpuFile)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	} else {
 
 		firstline := strings.Fields(strings.Split(string(contents), "\n")[0])
@@ -79,7 +79,7 @@ func cpuVpuUsage() (string, string) {
 	// start calculate vpu usage
 	contents, err = ioutil.ReadFile(vpuFile)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 
 	} else {
 		totalMemSize, _ := strconv.Atoi(strings.Fields(strings.Split(string(contents), ",")[0])[2])
@@ -87,8 +87,6 @@ func cpuVpuUsage() (string, string) {
 
 		vpuPercentage = (float64(float64(usedMemSize) / float64(totalMemSize))) * 100
 	}
-
-	// fmt.Printf("CPU usage is %.3f%%\n", cpuPercentage)
 
 	return strconv.FormatFloat(cpuPercentage, 'f', 6, 64), strconv.FormatFloat(vpuPercentage, 'f', 6, 64)
 }
@@ -110,10 +108,10 @@ func HeartBeat() {
 		CoreTemperature: "pass",
 	}
 	send, err := json.Marshal(post)
-	fmt.Println(string(send))
+	//log.Println(string(send))
 	//向上位机报告自己的状态
-	//resp, err := http.Post(url, "application/json", strings.NewReader(string(send)))
-	resp, err := http.Get(url)
+	resp, err := http.Post(url, "application/json", strings.NewReader(string(send)))
+	//resp, err := http.Get(url)
 	if err != nil {
 		log.Panicln(err)
 	}
@@ -132,7 +130,7 @@ func HeartBeat() {
 		log.Panicln(err)
 	} else if response.Results.SyncStates == 1 {
 		//调用获取同步任务
-		fmt.Println("调用获取同步任务")
+		log.Println("调用获取同步任务")
 	}
 
 }

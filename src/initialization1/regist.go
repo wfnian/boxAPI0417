@@ -4,7 +4,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -25,7 +24,7 @@ func Regist() {
 		//url = "http://localhost:3000/object" //临时测试
 		resp, err := http.Get(url)
 		if err != nil {
-			fmt.Println("url err", err)
+			log.Println("url err", err)
 			continue
 		}
 		body, _ := ioutil.ReadAll(resp.Body)
@@ -34,11 +33,11 @@ func Regist() {
 		err = json.Unmarshal([]byte(body), &ack)
 		if err != nil {
 			//panic(err)
-			fmt.Println(err)
+			log.Println(err)
 			continue
 		}
 		if ack.Status == 200 {
-			fmt.Println("ok")
+			log.Println("ok")
 			break
 		} else {
 			log.Println("Error:", ack.Status, "retry")

@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
 	"../utils"
 )
@@ -23,10 +24,10 @@ func AckForSyncTask() error {
 
 	url := "http://" + IP + "/box/ackForSyncTask?identifierId="
 	url += UUID
-	url = "http://localhost:3000/object"
-
-	//resp, err := http.Post(url, "application/json", strings.NewReader(string(send)))
-	resp, err := http.Get(url)
+	//url = "http://localhost:3000/object"
+	send := 1
+	resp, err := http.Post(url, "application/json", strings.NewReader(string(send)))
+	//resp, err := http.Get(url)
 	if err != nil {
 		log.Panicln(err)
 	}
@@ -46,7 +47,7 @@ func AckForSyncTask() error {
 	} else if response.Results.SyncStates == 1 {
 		//调用获取同步任务
 		fmt.Println("调用获取同步任务")
-		
+
 		//GetSyncTask()
 		return nil
 	}

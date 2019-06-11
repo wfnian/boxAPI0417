@@ -3,104 +3,36 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
+	"../StdJsonrpc"
+	"../StdMsgForm"
 	"../utils"
 )
 
-type Response2 struct {
-	Message  string   `json:"message"`
-	Results  Results2 `json:"results"`
-	Status   int      `json:"status"`
-	Timstamp string   `json:"timstamp"`
+type Create_source struct {
+	Url    string            `json:"url"`
+	Id     string            `json:"id"`
+	Config StdJsonrpc.Config `json:"config"`
 }
 
-type Results2 struct {
-	BoxConfigs []BoxConfigInfo `json:"box_configs"`
-	Collectors []Collectors    `json:"collectors"`
-	Users      []UserInfo      `json:"users"`
-}
-
-type BoxConfigInfo struct {
-	TaskId        string  `json:"taskId"`
-	Action        string  `json:"action"`
-	Verify        string  `json:"verify"`
-	FirstPercent  float64 `json:"firstPercent"`
-	SecondPercent float64 `json:"secondPercent"`
-	ImgQuality    float64 `json:"imgQuality"`
-}
-
-type Collectors struct {
-	TaskId          string          `json:"taskId"`
-	Action          string          `json:"action"`
-	CollectorId     string          `json:"collectorId"`   //采集端ID
-	CollectorType   string          `json:"collectorType"` //采集端LEIXING
-	SrcId           string          `json:"srcId"`
-	CollectorName   string          `json:"collectorName"`
-	LockConfig      LockConfig      `json:"lockConfig"`
-	CollectorConfig CollectorConfig `json:"collectorConfig"`
-}
-
-type LockConfig struct {
-	Gate Gate `json:"gate"`
-}
-
-type Gate struct {
-	Extension int `json:"extension"`
-	Cmd       Cmd `json:"cmd"`
-}
-
-type Cmd struct {
-	Type      int    `json:"type"`
-	Interval  int    `json:"interval"`
-	Delay     int    `json:"delay"`
-	Host      string `json:"host"`
-	Port      int    `json:"port"`
-	SuckCmd   string `json:"suckCmd"`
-	SuckReply string `json:"suckReply"`
-	ShutCmd   string `json:"shutCmd"`
-	ShutReply string `json:"shutReply"`
-}
-
-type CollectorConfig struct {
-	Max_face       int  `json:"max_face"`
-	Min_face       int  `json:"min_face"`
-	Upload_display bool `json:"upload_display"`
-	Display_width  int  `json:"display_width"`
-	Area           struct {
-		Top    int `json:"top"`
-		Left   int `json:"left"`
-		Width  int `json:"width"`
-		Height int `json:"height"`
-	}
-	Url string `json:"url"`
-}
-
-type UserInfo struct {
-	TaskId                  string        `json:"taskId"`
-	Action                  string        `json:"action"`
-	UserId                  string        `json:"userId"`
-	UserName                string        `json:"userName"`
-	FeatureSource           string        `json:"featureSource"`
-	UserImgs                []UserImgInfo `json:"userImages"`
-	Feature                 string        `json:"feature"`
-	CollectorIds            []string      `json:"collectorIds"`
-	PermissionCollectorType string        `json:"permissionCollectorType"`
-	PermissionStartTime     string        `json:"permissionStartTime"`
-	PermissionEndTime       string        `json:"permissionEndTime"`
-	PermissionTimeType      string        `json:"permissionTimeType"`
-	Message                 string        `json:"message"`
-	CardId                  string        `json:"cardId"`
-	IsNeedCard              int           `json:"isNeedCard"`
-}
-
-type UserImgInfo struct {
-	ImgId   string  `json:"imgId"`
-	Action  string  `json:"action"`
-	Quality float64 `json:"quality"`
-	Url     string  `json:"url"`
+type JsonrpcResponse struct {
+	Jsonrpc string `json:"jsonrpc"`
+	Result  struct {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+		Id   string `json:"id"`
+	} `json:"result"`
+	Error struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Data    string `json:"data"`
+	} `json:"error"`
+	Id int `json:"id"`
 }
 
 func GetSyncTask() {
@@ -120,9 +52,9 @@ func GetSyncTask() {
 	if err != nil {
 		log.Panicln(err)
 	}
-	fmt.Println(string(body))
+	//fmt.Println(string(body))
 
-	var response Response2
+	var response StdMsgForm.Response
 	err = json.Unmarshal([]byte(body), &response)
 	if err != nil {
 		log.Panicln(err)
@@ -130,11 +62,85 @@ func GetSyncTask() {
 	if response.Message != "成功!" {
 		log.Panicln(err)
 	} else {
-		//TODO 执行同步任务
+		// TODO 执行同步任务，配置box信息，配置collector信息
+		err = setCollectors(response)
+		if err != nil {
+			log.Panicln(err)
+		}
 
-		//上报同步任务结果
+		err = setBox(response)
+		if err != nil {
+			log.Panicln(err)
+		}
+
+		err = setUsers(response)
+		if err != nil {
+			log.Panicln(err)
+		}
+		// 上报同步任务结果
 
 	}
+}
+
+func setBox(response StdMsgForm.Response) error {
+
+	return nil
+}
+
+func setCollectors(response StdMsgForm.Response) error {
+	var config StdJsonrpc.Config
+	for i := 0; i < len(response.Results.Collectors); i++ {
+		config.Detect_interval = 5
+		config.Track_interval = 1
+		config.Sample_interval = 4
+		config.Merge_threshold = 0.8
+		config.Min_face_count = 2
+		config.Max_tracker = 12
+		config.Max_feature = 3
+		config.Max_face = response.Results.Collectors[i].CollectorConfig.Max_face
+		config.Min_face = response.Results.Collectors[i].CollectorConfig.Min_face
+		config.Upload_display = response.Results.Collectors[i].CollectorConfig.Upload_display
+		config.Display_width = response.Results.Collectors[i].CollectorConfig.Display_width
+		config.Area = response.Results.Collectors[i].CollectorConfig.Area
+
+		var postData StdJsonrpc.JsonrpcPost
+		url := "http://localhost:7001"
+		postData.Method = "create_source"
+		postData.Params = Create_source{
+			Url:    response.Results.Collectors[i].CollectorConfig.Url,
+			Config: config,
+		}
+		send, _ := json.Marshal(postData)
+		resp, err := http.Post(url, "application/json", strings.NewReader(string(send)))
+		if err != nil {
+			log.Println(err)
+		}
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+
+		if err != nil {
+			log.Panicln(err)
+		}
+		fmt.Println(string(body))
+		var res JsonrpcResponse
+
+		err = json.Unmarshal([]byte(body), &res)
+		if err != nil {
+			log.Panicln(err)
+		}
+		if res.Result.Code != 0 && res.Result.Msg != "SUCC" {
+			log.Panicln("Creat_source ERROR")
+			return errors.New("Creat_source ERROR")
+		}
+
+	}
+
+	return nil
+}
+
+func setUsers(response StdMsgForm.Response) error {
+
+	return nil
 }
 
 func main() {
