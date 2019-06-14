@@ -1,4 +1,4 @@
-package main
+package ackForSyncTask
 
 import (
 	"encoding/json"
@@ -8,15 +8,16 @@ import (
 	"net/http"
 	"strings"
 
+	"../StdMsgForm"
 	"../utils"
 )
 
-type SyncResult struct {
-	Action  string `json:"action"`
-	TaskId  string `json:"taskId"`
-	Message string `json:"message"`
-	Stat    int    `json:"stat"`
-}
+//type SyncResult struct {
+//	Action  string `json:"action"`
+//	TaskId  string `json:"taskId"`
+//	Message string `json:"message"`
+//	Stat    int    `json:"stat"`
+//}
 
 func AckForSyncTask() error {
 	UUID := utils.GetUUID() //获取本机唯一标识符，本机唯一标识符设置详见函数
@@ -37,7 +38,7 @@ func AckForSyncTask() error {
 	if err != nil {
 		log.Panicln(err)
 	}
-	var response Response
+	var response StdMsgForm.Response
 	err = json.Unmarshal([]byte(body), &response)
 	if err != nil {
 		log.Panicln(err)

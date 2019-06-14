@@ -2,13 +2,10 @@ package rpcFacetrack
 
 import (
 	"../StdJsonrpc"
-	"errors"
-	"fmt"
-	"net/http"
+	"encoding/json"
+	"github.com/gin-gonic/gin"
+	"log"
 )
-
-type Track struct {
-}
 
 type Params struct {
 	Id         string             `json:"id"`
@@ -24,13 +21,50 @@ type Returns struct {
 	Msg  string `json:"msg"`
 }
 
-func (Track) Facetrack(r *http.Request, params *Params, result *Returns) error {
-	if params.Id == "1" {
-		var err error = errors.New("ID ERR")
-		return err
+type JsonrpcResponseSuccess struct {
+	Jsonrpc string  `json:"jsonrpc"`
+	Result  Returns `json:"result"`
+	Id      int     `json:"id"`
+}
+
+type JsonrpcPost struct {
+	Jsonrpc string `json:"jsonrpc"`
+	Method  string `json:"method"`
+	Params  Params `json:"params"`
+	Id      int    `json:"id"`
+}
+
+func facetrack(c *gin.Context) {
+	data, err := c.GetRawData()
+	if err != nil {
+		log.Fatalln(err)
 	}
-	*result = Returns{0, "SUCC"}
-	fmt.Println(params)
+	var tracked JsonrpcPost
+	err = json.Unmarshal([]byte(data), &tracked)
+
+	//log.Println(tracked)
+	log.Println(tracked.Id)
+	log.Println(tracked.Params.Source)
+	log.Println(tracked.Params.Props)
+	log.Println(tracked.Params.Faces)
+	//log.Println(tracked.Params)
+
+	c.JSON(200, JsonrpcResponseSuccess{
+		Jsonrpc: "2.0",
+		Id:      2,
+		Result:  Returns{Code: 0, Msg: "SUCC"},
+	})
+}
+
+func Track() error {
+	router := gin.Default()
+
+	router.POST("", facetrack)
+
+	err := router.Run(":9821")
+	if err != nil {
+		log.Panicln(err)
+	}
 	return nil
 }
 

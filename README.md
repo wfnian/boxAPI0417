@@ -36,6 +36,9 @@
     - ...
   - test(临时验证)
 
+## 进度
+### 6.14日周五
+![14](https://upload.cc/i1/2019/06/14/smtD0E.jpg)
 
 ## 参考
 [Golang标准库文档](https://studygolang.com/pkgdoc)  
