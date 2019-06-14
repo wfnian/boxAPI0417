@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"fmt"
 	"io/ioutil"
+	"log"
 )
 
 //GetUUID 浏览/dev/disk/by-uuid/下的设备文件信息.
@@ -10,9 +10,10 @@ import (
 func GetUUID() string {
 	var UUID string
 	files := "/dev/disk/by-uuid"
-	dirlist, e := ioutil.ReadDir(files)
-	if e != nil {
-		fmt.Println("read dir error")
+	dirlist, err := ioutil.ReadDir(files)
+	if err != nil {
+		log.Println(err)
+		log.Println("In get UUID:read dir error")
 	}
 
 	for _, v := range dirlist {

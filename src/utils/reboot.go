@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os/exec"
@@ -9,7 +8,7 @@ import (
 
 //Reboot 重启机器 修改了本机IP等需要重启
 func Reboot() {
-	fmt.Println("reboot")
+	log.Println("reboot")
 	shell := exec.Command("ls", "-l") //修改为重启 reboot
 	stdout, err := shell.StdoutPipe()
 	defer stdout.Close()

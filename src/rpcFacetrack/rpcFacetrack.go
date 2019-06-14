@@ -46,7 +46,7 @@ func facetrack(c *gin.Context) {
 	log.Println(tracked.Id)
 	log.Println(tracked.Params.Source)
 	log.Println(tracked.Params.Props)
-	log.Println(tracked.Params.Faces)
+	log.Println(tracked.Params.Faces) //list [{}]
 	//log.Println(tracked.Params)
 
 	c.JSON(200, JsonrpcResponseSuccess{
