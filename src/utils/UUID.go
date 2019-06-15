@@ -19,5 +19,5 @@ func GetUUID() string {
 	for _, v := range dirlist {
 		UUID += v.Name()
 	}
-	return UUID
+	return UUID[:20]
 }

@@ -1,6 +1,6 @@
-package main
+//package main
 
-//package heartbeat2
+package heartbeat2
 
 import (
 	"encoding/json"
@@ -97,10 +97,11 @@ func HeartBeat() {
 	UUID := utils.GetUUID() //获取本机唯一标识符，本机唯一标识符设置详见函数
 	IP := utils.GetIP()
 
+	//url := "http://" + IP + "/box/heartBeat?identifierId="
 	url := "http://" + IP + "/box/heartBeat?identifierId="
-	url += UUID
-	url = "http://localhost:3000/object"
-	cpu, vpu := cpuVpuUsage()
+	url = "http://pass.deepdot.cn/deeppassEserver" + "/box/heartBeat?identifierId=" + UUID
+	log.Println(url)
+	cpu, vpu := "12", "23" //cpuVpuUsage()
 	// log.Println(cpu, vpu)
 	post := BoxRunningInfo{
 		CPU:             cpu,
@@ -108,7 +109,7 @@ func HeartBeat() {
 		CoreTemperature: "pass",
 	}
 	send, err := json.Marshal(post)
-	//log.Println(string(send))
+	log.Println(string(send))
 	//向上位机报告自己的状态
 	resp, err := http.Post(url, "application/json", strings.NewReader(string(send)))
 	//resp, err := http.Get(url)
@@ -121,6 +122,7 @@ func HeartBeat() {
 	if err != nil {
 		log.Panicln(err)
 	}
+	log.Println(string(body))
 	var response Response
 	err = json.Unmarshal([]byte(body), &response)
 	if err != nil {

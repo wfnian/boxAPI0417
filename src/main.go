@@ -2,10 +2,11 @@
 package main
 
 import (
-	"fmt"
-
-	"./initialization1"
+	_ "./getConfig3"
+	"./heartbeat2"
+	_ "./initialization1"
 	"./utils"
+	"fmt"
 )
 
 // 初始化，包括本机唯一的ID
@@ -16,7 +17,9 @@ func main() {
 	//utils.Reboot()
 	//initialization1.Regist()
 	fmt.Println(utils.GetIP())
-	initialization1.InitSetting()
+	//initialization1.Regist()
+	//getconfig3.GetServerUrl()
+	heartbeat2.HeartBeat()
 	fmt.Println("main end")
 
 }

@@ -1,5 +1,6 @@
 package getconfig3
-// package main
+
+//package main
 
 import (
 	"encoding/json"
@@ -16,14 +17,15 @@ import (
 func GetServerUrl() {
 	UUID := utils.GetUUID() //获取本机唯一标识符，本机唯一标识符设置详见函数
 	IP := utils.GetIP()
-
+	log.Println(IP)
 	for {
-		url := "http://" + IP + "/box/getServerUrl?identifierId="
+		//url := "http://" + IP + "/box/getServerUrl?identifierId="
+		url := "http://pass.deepdot.cn/deeppassEserver" + "/box/getServerUrl?identifierId="
 		url += UUID
-
+		log.Println(url)
 		// 临时测试用
 		// url = "http://localhost:3000/object"
-		
+
 		resp, err := http.Get(url)
 		if err != nil {
 			log.Println(err)
@@ -37,9 +39,10 @@ func GetServerUrl() {
 			log.Println(err)
 			continue
 		}
-		if ack.Status == 200 {
+		if ack.Status == 200 && ack.Message == "成功！" {
 			//setting network 配置网络情况
 			fmt.Println(ack.Results.Network)
+			log.Println(ack.Results.ServerUrl)
 			//networkSetting(ack.Results.Network)
 			ConfigNetwork(ack.Results.Network.Address, ack.Results.Network.Netmask, ack.Results.Network.Gateway)
 			break
