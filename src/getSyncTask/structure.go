@@ -36,6 +36,26 @@ type JsonrpcResponse struct {
 	Id int `json:"id"`
 }
 
+type LockConfig struct {
+	Gate Gate `json:"gate"`
+}
+
+type Gate struct {
+	Extension int `json:"extension"`
+	Cmd struct{
+		Type      int    `json:"type"`
+		Interval  int    `json:"interval"`
+		Delay     int    `json:"delay"`
+		Host      string `json:"host"`
+		Port      int    `json:"port"`
+		SuckCmd   string `json:"suckCmd"`
+		SuckReply string `json:"suckReply"`
+		ShutCmd   string `json:"shutCmd"`
+		ShutReply string `json:"shutReply"`
+	} `json:"cmd"`
+}
+
+
 func HandleErr(err error, level int, msg string) {
 	/*
 		level 0 :警告

@@ -1,4 +1,4 @@
-package handlerErr
+package handleErr
 
 import "log"
 
