@@ -8,6 +8,20 @@ type Create_source struct {
 	Id     string            `json:"id"`
 	Config StdJsonrpc.Config `json:"config"`
 }
+type Create_source_returns struct {
+	Jsonrpc string `json:"jsonrpc"`
+	Result  struct {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+		Id   string `json:"id"`
+	} `json:"result"`
+	Error struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Data    string `json:"data"`
+	} `json:"error"`
+	Id int `json:"id"`
+}
 
 //Update_source update
 type Update_source struct {
@@ -15,18 +29,29 @@ type Update_source struct {
 	Id     string            `json:"id"`
 	Config StdJsonrpc.Config `json:"config"`
 }
+type Update_source_returns struct {
+	Jsonrpc string `json:"jsonrpc"`
+	Result  struct {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+	} `json:"result"`
+	Error struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Data    string `json:"data"`
+	} `json:"error"`
+	Id int `json:"id"`
+}
 
 //Delete_source delete
 type Delete_source struct {
 	Id string `json:"id"`
 }
-
-type JsonrpcResponse struct {
+type Delete_source_returns struct {
 	Jsonrpc string `json:"jsonrpc"`
 	Result  struct {
-		Code int    `json:"code"`
-		Msg  string `json:"msg"`
-		Id   string `json:"id"`
+		Code    int    `json:"code"`
+		Msg string `json:"msg"`
 	} `json:"result"`
 	Error struct {
 		Code    int    `json:"code"`
@@ -42,7 +67,7 @@ type LockConfig struct {
 
 type Gate struct {
 	Extension int `json:"extension"`
-	Cmd struct{
+	Cmd       struct {
 		Type      int    `json:"type"`
 		Interval  int    `json:"interval"`
 		Delay     int    `json:"delay"`
@@ -53,6 +78,75 @@ type Gate struct {
 		ShutCmd   string `json:"shutCmd"`
 		ShutReply string `json:"shutReply"`
 	} `json:"cmd"`
+}
+
+//Create_db
+type Create_db struct {
+	Id     string `json:"id"`
+	Volume int    `json:"volume"`
+}
+type Create_db_returns struct {
+	Jsonrpc string `json:"jsonrpc"`
+	Result  struct {
+		Code    int    `json:"code"`
+		Msg string `json:"msg"`
+		Id string `json:"id"`
+	} `json:"result"`
+	Error struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Data    string `json:"data"`
+	} `json:"error"`
+	Id int `json:"id"`
+}
+
+type Get_features struct {
+	Images []string `json:"images"`
+	Retattr bool `json:"retattr"`
+}
+type Get_features_returns struct {
+	Jsonrpc string `json:"jsonrpc"`
+	Result  struct {
+		Code    int    `json:"code"`
+		Msg string `json:"msg"`
+		Features []string `json:"features"`
+		Attrs []StdJsonrpc.Faces `json:"attrs"`
+	} `json:"result"`
+	Error struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Data    string `json:"data"`
+	} `json:"error"`
+	Id int `json:"id"`
+}
+
+type Create_persons struct {
+	Features [][]Features `json:"features"`
+	Ids []string `json:"ids"`
+	Db string `json:"db"`
+}
+type Create_persons_returns struct {
+	Jsonrpc string `json:"jsonrpc"`
+	Result  struct {
+		Code    int    `json:"code"`
+		Msg string `json:"msg"`
+		Persons []Person `json:"persons"`
+	} `json:"result"`
+	Error struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Data    string `json:"data"`
+	} `json:"error"`
+	Id int `json:"id"`
+}
+
+type Person struct {
+	Id int `json:"id"`
+	Faces []int `json:"faces"`
+}
+type Features struct {
+	Feature string `json:"feature"`
+	Quality float64 `json:"quality"`
 }
 
 

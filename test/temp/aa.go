@@ -1,39 +1,27 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
-	"log"
+	"io/ioutil"
+	"net/http"
+	"os"
 )
 
-type User struct {
-	Name   string //这引号里面的就是tag
-	Passwd string
-}
-
-func HandleErr(err error, level int, msg string) {
-	/*
-		level 0 :警告
-		level 1 :终止
-	*/
-	if err != nil {
-		if level == 0 {
-			log.Println(err, msg)
-		} else {
-			log.Panicln(err, msg)
-		}
-
+func main() {
+	url:="https://pic3.zhimg.com/v2-6391ef8cc345fbd7d7d30a6e3d22aa21_xl.jpg"
+	resp,err:=http.Get(url)
+	if err!=nil {
+		fmt.Println(err)
 	}
-}
-
-func _main() {
-	//var a []User
-	//a = append(a,User{"w","ww"})
-	//a = append(a,User{"f","ff"})
-	//fmt.Println(a)
-	//j,err:=json.Marshal("_fda")
-	//err=errors.New("啊啊啊")
-	//HandleErr(err,1,"")
-	//fmt.Println(string(j))
-	s := "fdsafdsfafdsafadsfsad"
-	fmt.Println(s[:10])
+	defer resp.Body.Close()
+	body,err:=ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("%T",(body))
+	f,err:=os.Create("a.jpg")
+	_, _ = f.Write(body)
+	imgBase64 := base64.StdEncoding.EncodeToString(body)
+	fmt.Println(imgBase64)
 }

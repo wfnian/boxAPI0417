@@ -3,7 +3,7 @@ package main
 
 import (
 	_ "./getConfig3"
-	"./heartbeat2"
+	"./getSyncTask"
 	_ "./initialization1"
 	"./utils"
 	"fmt"
@@ -19,7 +19,7 @@ func main() {
 	fmt.Println(utils.GetIP())
 	//initialization1.Regist()
 	//getconfig3.GetServerUrl()
-	heartbeat2.HeartBeat()
+	//heartbeat2.HeartBeat()
 	fmt.Println("main end")
-
+	getSyncTask.Main()
 }

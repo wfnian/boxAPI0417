@@ -10,9 +10,9 @@ type JsonrpcPost struct {
 
 //JsonrpcResponse std
 //type JsonrpcResponse struct {
-//	Jsonrpc string      `json:"jsonrpc"`
+//	Jsonrpc string `json:"jsonrpc"`
 //	Result  interface{} `json:"result"`
-//	Error   struct {
+//	Error struct {
 //		Code    int    `json:"code"`
 //		Message string `json:"message"`
 //		Data    string `json:"data"`
