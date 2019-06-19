@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/pkg/errors"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -29,6 +30,8 @@ func SetUsers(response StdMsgForm.Response) error {
 		switch response.Results.Users[i].Action {
 		case "USERADD":
 			{
+				err = c.Insert(response.Results.Users[i])
+				HandleErr(err, 0, "Insert message")
 				if response.Results.Users[i].FeatureSource == "img" {
 					for j := 0; j < len(response.Results.Users[i].UserImgs); j++ {
 						if response.Results.Users[i].UserImgs[j].Action == "ADD" {
@@ -36,7 +39,7 @@ func SetUsers(response StdMsgForm.Response) error {
 							var images []string
 							images = append(images, imageBase64)
 							res := GetFeatures(images)
-							CreatePersons(dbName,response.Results.Users[i].UserId,res[0])
+							CreatePersons(dbName, response.Results.Users[i].UserId, res[0])
 						} else if response.Results.Users[i].UserImgs[j].Action == "DELETE" {
 
 						}
@@ -45,11 +48,31 @@ func SetUsers(response StdMsgForm.Response) error {
 			}
 		case "USEREDIT":
 			{
+				if response.Results.Users[i].UserImgs == nil {
+					//用户的基础信息修改
+					err = c.Update(bson.M{"userID": response.Results.Users[i].UserId}, response.Results.Users[i])
+					HandleErr(err, 0, "Update message")
+				} else {
+					err = c.Update(bson.M{"userID": response.Results.Users[i].UserId}, response.Results.Users[i])
+					HandleErr(err, 0, "Update message")
+					for j := 0; j < len(response.Results.Users[i].UserImgs); j++ {
+						if response.Results.Users[i].UserImgs[j].Action == "ADD" {
+							imageBase64 := convertPic2Base64(response.Results.Users[i].UserImgs[j].Url)
+							var images []string
+							images = append(images, imageBase64)
+							res := GetFeatures(images)
+							CreatePersons(dbName, response.Results.Users[i].UserId, res[0])
+						} else if response.Results.Users[i].UserImgs[j].Action == "DELETE" {
 
+						}
+					}
+				}
 			}
 		case "USERDELETE":
 			{
-
+				err = c.Remove(bson.M{"userID": response.Results.Users[i].UserId})
+				HandleErr(err, 0, "Delete message")
+				DeletePerson(response.Results.Users[i].UserId, dbName)
 			}
 
 		}
@@ -138,10 +161,10 @@ func CreatePersons(dbName string, featureid string, feature string) {
 		Ids:      fID,
 		Features: f,
 	}
-	postDate:=StdJsonrpc.JsonrpcPost{
-		Jsonrpc:"2.0",
-		Method:"create_persons",
-		Params:param,
+	postDate := StdJsonrpc.JsonrpcPost{
+		Jsonrpc: "2.0",
+		Method:  "create_persons",
+		Params:  param,
 	}
 	url := "http://localhost:7002"
 	send, _ := json.Marshal(postDate)
@@ -158,7 +181,32 @@ func CreatePersons(dbName string, featureid string, feature string) {
 		log.Println("Create persons ok!")
 	}
 
+}
 
+func DeletePerson(personID string, dbName string) {
+	param := Delete_person{
+		Id: personID,
+		Db: dbName,
+	}
+	postDate := StdJsonrpc.JsonrpcPost{
+		Jsonrpc: "2.0",
+		Params:  param,
+		Method:  "delete_person",
+	}
+	url := "http://localhost:7002"
+	send, _ := json.Marshal(postDate)
+	resp, err := http.Post(url, "application/json", strings.NewReader(string(send)))
+	HandleErr(err, 1, "http post error")
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	HandleErr(err, 0, "")
+
+	var res Delete_source_returns
+	err = json.Unmarshal([]byte(body), &res)
+	HandleErr(err, 1, "解析json出错")
+	if res.Result.Code == 0 && res.Result.Msg == "SUCC" {
+		log.Println("Delete persons ok!")
+	}
 }
 
 func Main() {

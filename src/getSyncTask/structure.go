@@ -50,8 +50,8 @@ type Delete_source struct {
 type Delete_source_returns struct {
 	Jsonrpc string `json:"jsonrpc"`
 	Result  struct {
-		Code    int    `json:"code"`
-		Msg string `json:"msg"`
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
 	} `json:"result"`
 	Error struct {
 		Code    int    `json:"code"`
@@ -88,9 +88,9 @@ type Create_db struct {
 type Create_db_returns struct {
 	Jsonrpc string `json:"jsonrpc"`
 	Result  struct {
-		Code    int    `json:"code"`
-		Msg string `json:"msg"`
-		Id string `json:"id"`
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+		Id   string `json:"id"`
 	} `json:"result"`
 	Error struct {
 		Code    int    `json:"code"`
@@ -101,16 +101,16 @@ type Create_db_returns struct {
 }
 
 type Get_features struct {
-	Images []string `json:"images"`
-	Retattr bool `json:"retattr"`
+	Images  []string `json:"images"`
+	Retattr bool     `json:"retattr"`
 }
 type Get_features_returns struct {
 	Jsonrpc string `json:"jsonrpc"`
 	Result  struct {
-		Code    int    `json:"code"`
-		Msg string `json:"msg"`
-		Features []string `json:"features"`
-		Attrs []StdJsonrpc.Faces `json:"attrs"`
+		Code     int                `json:"code"`
+		Msg      string             `json:"msg"`
+		Features []string           `json:"features"`
+		Attrs    []StdJsonrpc.Faces `json:"attrs"`
 	} `json:"result"`
 	Error struct {
 		Code    int    `json:"code"`
@@ -122,14 +122,14 @@ type Get_features_returns struct {
 
 type Create_persons struct {
 	Features [][]Features `json:"features"`
-	Ids []string `json:"ids"`
-	Db string `json:"db"`
+	Ids      []string     `json:"ids"`
+	Db       string       `json:"db"`
 }
 type Create_persons_returns struct {
 	Jsonrpc string `json:"jsonrpc"`
 	Result  struct {
-		Code    int    `json:"code"`
-		Msg string `json:"msg"`
+		Code    int      `json:"code"`
+		Msg     string   `json:"msg"`
 		Persons []Person `json:"persons"`
 	} `json:"result"`
 	Error struct {
@@ -141,14 +141,31 @@ type Create_persons_returns struct {
 }
 
 type Person struct {
-	Id int `json:"id"`
+	Id    int   `json:"id"`
 	Faces []int `json:"faces"`
 }
 type Features struct {
-	Feature string `json:"feature"`
+	Feature string  `json:"feature"`
 	Quality float64 `json:"quality"`
 }
 
+type Delete_person struct {
+	Id string `json:"id"`
+	Db string `json:"db"`
+}
+type Delete_person_returns struct {
+	Jsonrpc string `json:"jsonrpc"`
+	Result  struct {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+	} `json:"result"`
+	Error struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Data    string `json:"data"`
+	} `json:"error"`
+	Id int `json:"id"`
+}
 
 func HandleErr(err error, level int, msg string) {
 	/*

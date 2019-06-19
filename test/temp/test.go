@@ -29,9 +29,9 @@ func main() {
 		log.Println(err)
 	}
 	var v []Returns
-	err = c.Find(bson.M{"code": 2 }).All(&v)
+	err = c.Find(bson.M{"code": 3}).All(&v)
 	fmt.Println(v)
-	a:=StdMsgForm.BoxRunningInfo{"1","2","3"}
+	a := StdMsgForm.BoxRunningInfo{"1", "2", "3"}
 	s, _ := json.Marshal(a)
 	fmt.Println(string(s))
 }
