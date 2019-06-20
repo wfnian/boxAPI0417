@@ -153,6 +153,7 @@ type Delete_person struct {
 	Id string `json:"id"`
 	Db string `json:"db"`
 }
+
 type Delete_person_returns struct {
 	Jsonrpc string `json:"jsonrpc"`
 	Result  struct {

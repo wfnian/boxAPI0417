@@ -1,38 +1,13 @@
 package rpcFacetrack
 
 import (
-	"../StdJsonrpc"
+	_ "../StdJsonrpc"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"log"
 )
 
-type Params struct {
-	Id         string             `json:"id"`
-	Source     string             `json:"source"`
-	Faces      []StdJsonrpc.Faces `json:"faces"`
-	Props      StdJsonrpc.Props   `json:"props"`
-	Background string             `json:"background"`
-	Features   []string           `json:"features"`
-}
 
-type Returns struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-}
-
-type JsonrpcResponseSuccess struct {
-	Jsonrpc string  `json:"jsonrpc"`
-	Result  Returns `json:"result"`
-	Id      int     `json:"id"`
-}
-
-type JsonrpcPost struct {
-	Jsonrpc string `json:"jsonrpc"`
-	Method  string `json:"method"`
-	Params  Params `json:"params"`
-	Id      int    `json:"id"`
-}
 
 func facetrack(c *gin.Context) {
 	data, err := c.GetRawData()
@@ -47,7 +22,9 @@ func facetrack(c *gin.Context) {
 	log.Println(tracked.Params.Source)
 	log.Println(tracked.Params.Props)
 	log.Println(tracked.Params.Faces) //list [{}]
+	log.Println(tracked.Params.Features)
 	//log.Println(tracked.Params)
+	go Search_person(tracked)
 
 	c.JSON(200, JsonrpcResponseSuccess{
 		Jsonrpc: "2.0",
@@ -62,14 +39,6 @@ func Track() error {
 	router.POST("", facetrack)
 
 	err := router.Run(":9821")
-	if err != nil {
-		log.Panicln(err)
-	}
+	HandleErr(err, 1, "端口9821启动失败")
 	return nil
 }
-
-//func (t *Track) Multiply(r *http.Request, args *Params, result *int) error {
-//	log.Println("Multiply %d with %d\n")
-//	*result = 2
-//	return nil
-//}

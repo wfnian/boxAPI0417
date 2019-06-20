@@ -61,7 +61,6 @@ func SetCollectors(response StdMsgForm.Response) error {
 					body, err := ioutil.ReadAll(resp.Body)
 
 					HandleErr(err, 0, "")
-					fmt.Println(string(body))
 					var res Create_source_returns
 					err = json.Unmarshal([]byte(body), &res)
 					HandleErr(err, 0, "解析json出错")
