@@ -2,6 +2,8 @@ package main
 
 import (
 	"../../src/StdMsgForm"
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -42,6 +44,8 @@ func main() {
 	fmt.Println(err)
 	fmt.Println(box)
 	fmt.Println(time.RFC3339)
-	now := time.Now().Format("2006-01-02 15:04:05")
-
+	//now := time.Now().Format("2006-01-02 15:04:05")
+	h :=md5.New()
+	h.Write([]byte("haha"))
+	fmt.Println(hex.EncodeToString(h.Sum(nil)))
 }
